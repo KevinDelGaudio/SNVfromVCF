@@ -1,0 +1,32 @@
+Package: SNVfromVCF
+Title: A simple tool for SNP mutation type determination
+Version: 0.99.0
+Authors@R: 
+    person("Kevin", "Del Gaudio", , "kevindelgaudiokdg@gmail.com", role = c("aut", "cre"))
+Description: A simple tool for SNP mutation type determination. From a VCF file and a 
+        reference genome it extracts the reference sequence of length specified by the 
+        user and its corresponding variant then there is a function that counts the 
+        occurrencies of each SNV and provides a simple plot visualization. 
+        This package is designed for analizing human variants.
+biocViews: Software, GeneticVariability, SNP
+License: GPL-2
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Depends:
+    R(>= 4.3.0),
+    VariantAnnotation,
+    tidyverse
+Imports:
+    BSgenome,
+    Biostrings,
+    GenomicRanges,
+    IRanges
+Suggests:
+    knitr,
+    rmarkdown,
+    BiocStyle,
+    testthat,
+    BSgenome.Hsapiens.UCSC.hg19,
+    BSgenome.Hsapiens.UCSC.hg38
+VignetteBuilder: knitr

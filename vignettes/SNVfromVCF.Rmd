@@ -1,0 +1,70 @@
+---
+title: "SNVfromVCF"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SNVfromVCF}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This package has the aim of analyzing the data from a VCF file in order to 
+identify the mutation types in the file and compare them to the reference 
+genome. The first step is to load the library.
+
+```{r setup}
+library(SNVfromVCF)
+```
+
+Now we need to load our VCF file using the function PreprocessVCF, that handles
+all the useful preprocessing of the original file and discard all the variants
+that are not Single Nucleotide Variants (SNVs). This specific file contains 
+SNVs present on the chromosome 1 of this subject.
+
+```{r}
+path <- system.file("example-data", "example.vcf", package="SNVfromVCF")
+vcf <- PreprocessVCF(path)
+```
+
+Then we need the reference genome that generated the VCF file, in this step it
+is very important to choose the correct assembly. Since this package is designed
+for human genomes we load the assembly "hg38" which is the most recent assembly
+of human genomes then we use vcf to filter out all the chromosomes and to keep
+only the sequence of chromosome 1. This can be done using the function
+PreprocessGenome. If you want to use a custom fasta file read the documentation
+in order to setup correctly the header of the file.
+
+```{r}
+genome <- PreprocessGenome(genome = "hg38", vcf = vcf)
+```
+
+The setup for our analysis is ready, now we use the function MutationTypes to
+retrieve the sequence around the SNV of length context_length; then it computes
+the strand, the mutation type, the reference sequence and the alternative 
+sequence. Note that the mutation from G to A is the same as C to T on the 
+reverse strand, which implies a redundancy that is addressed by converting the 
+mutation types obtained for mutations of REF bases A and G to their respective 
+reverse complements. Thus all mutation types are reported such that they have C 
+or T as the mutated REF base. The mutations which are kept as they are are
+on the positive strand and the mutations for which the reverse complement is 
+computed are on the negative strand.
+
+```{r}
+mut_types <- MutationsTable(vcf = vcf, genome = genome, context_length = 3)
+mut_types
+```
+
+Finally we use the function TypeCounts to count the occurrence of each mutation 
+type and plot the result if requested. By default the parameter plot is set to
+FALSE but if you want to show the plot set it up to TRUE.
+
+```{r, fig.dim = c(10, 7)}
+count_table <- TypeCounts(mut_types, plot = TRUE)
+```
+
