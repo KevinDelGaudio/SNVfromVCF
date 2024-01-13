@@ -46,7 +46,7 @@ test_that("Running PreprocessGenome with hg19", {
 })
 
 test_that("Running PreprocessGenome with hg38", {
-    genome <- PreprocessGenome("hg19")
+    genome <- PreprocessGenome("hg38")
     expect_equal(length(genome), 25)
     expect_equal(names(genome), c(paste0("chr", c(seq_len(22))),
                                   "chrX", "chrY", "chrM"))
